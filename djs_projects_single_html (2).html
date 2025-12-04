@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DJS-Projects — Don's JapSpec Projects</title>
+  <meta name="description" content="Japanese car modifications - inventory, before/after concepts & visualizer" />
+  <!-- Tailwind CDN for quick demo -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* small styles for before/after overlay */
+    .ba-wrapper{position:relative;overflow:hidden;border-radius:0.5rem}
+    .ba-wrapper img{display:block;width:100%;height:320px;object-fit:cover}
+    .ba-after{position:absolute;top:0;left:0;height:100%;overflow:hidden}
+    .ba-handle{position:absolute;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:999px;background:white;box-shadow:0 4px 12px rgba(0,0,0,0.2);border:2px solid rgba(0,0,0,0.08)}
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+  <header class="bg-gradient-to-r from-sky-600 to-indigo-700 text-white p-6">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-extrabold">DJS-Projects</h1>
+        <div class="text-sm opacity-90">Don's JapSpec Projects — Japanese car parts & mods</div>
+      </div>
+      <nav class="flex gap-4">
+        <a href="#inventory" class="hover:underline">Inventory</a>
+        <a href="#concepts" class="hover:underline">Concepts</a>
+        <a href="#visualizer" class="hover:underline">Visualizer</a>
+        <a href="#contact" class="hover:underline">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto p-6">
+    <section class="grid md:grid-cols-2 gap-6 items-center">
+      <div>
+        <h2 class="text-4xl font-bold">Japanese car parts & modification concepts</h2>
+        <p class="mt-4 text-gray-700">Specialising in Nissan, Toyota, Subaru, Honda and Mitsubishi — from aesthetic body kits to engine and gearbox upgrades. Visualize before & after concepts and explore our parts inventory.</p>
+        <div class="mt-4 flex gap-3">
+          <a href="#inventory" class="bg-white px-4 py-2 rounded shadow">View Inventory</a>
+          <a href="#contact" class="bg-indigo-600 text-white px-4 py-2 rounded shadow">Get a Quote</a>
+        </div>
+      </div>
+      <div>
+        <img src="https://images.unsplash.com/photo-1523986371872-9d3ba2e2f642?auto=format&fit=crop&w=1200&q=60" alt="hero" class="rounded shadow h-64 w-full object-cover"/>
+      </div>
+    </section>
+
+    <!-- INVENTORY -->
+    <section id="inventory" class="mt-10">
+      <div class="flex items-center justify-between">
+        <h3 class="text-2xl font-bold">Parts Inventory</h3>
+        <div class="flex gap-2">
+          <button id="addSample" class="bg-green-600 text-white px-3 py-1 rounded">Add sample part</button>
+          <button id="exportCSV" class="bg-gray-800 text-white px-3 py-1 rounded">Export CSV</button>
+        </div>
+      </div>
+
+      <div class="mt-4 grid md:grid-cols-4 gap-4">
+        <div class="col-span-1 md:col-span-1">
+          <div class="bg-white p-4 rounded shadow">
+            <label class="block text-sm font-medium">Brand</label>
+            <select id="brandFilter" class="mt-1 w-full border rounded p-2"></select>
+
+            <label class="block text-sm font-medium mt-3">Category</label>
+            <select id="categoryFilter" class="mt-1 w-full border rounded p-2"></select>
+
+            <label class="block text-sm font-medium mt-3">Search</label>
+            <input id="q" placeholder="Search parts, models" class="mt-1 w-full border rounded p-2" />
+          </div>
+
+          <div class="mt-4 bg-white p-4 rounded shadow">
+            <h4 class="font-semibold">Quick Filters</h4>
+            <div class="mt-2 flex flex-wrap gap-2" id="quickFilters"></div>
+          </div>
+        </div>
+
+        <div class="col-span-3 md:col-span-3">
+          <div id="productGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+          <div id="noResults" class="hidden bg-white p-4 rounded shadow mt-4">No parts found.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONCEPTS / BEFORE-AFTER -->
+    <section id="concepts" class="mt-12">
+      <h3 class="text-2xl font-bold">Concept Visuals</h3>
+      <p class="text-gray-600 mt-2">See before & after modification ideas to help customers imagine the final result.</p>
+
+      <div class="mt-6 grid md:grid-cols-2 gap-6">
+        <div>
+          <div class="ba-wrapper">
+            <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=60" alt="before"/>
+            <div id="afterLayer" class="ba-after" style="width:50%">
+              <img src="https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=1200&q=60" alt="after"/>
+            </div>
+            <div id="baHandle" class="ba-handle" style="left:calc(50% - 14px)"></div>
+          </div>
+          <input id="baRange" type="range" min="0" max="100" value="50" class="w-full mt-2" />
+        </div>
+
+        <div class="bg-white p-4 rounded shadow">
+          <h4 class="font-semibold">Modification Plans</h4>
+          <ul class="mt-2 list-disc list-inside text-gray-700">
+            <li>Stage 1: Aesthetic (body kit, wheels, lights)</li>
+            <li>Stage 2: Handling & braking (coilovers, brakes)</li>
+            <li>Stage 3: Performance (intake, turbo, gearbox)</li>
+            <li>Stage 4: Final tune & fitment checking</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- VISUALIZER -->
+    <section id="visualizer" class="mt-12 grid md:grid-cols-3 gap-6">
+      <div class="md:col-span-2">
+        <div class="bg-white p-4 rounded shadow">
+          <h4 class="font-bold">Live Visualizer</h4>
+          <p class="text-sm text-gray-600">Preview a concept car by adding parts from the inventory. This demo layers thumbnails on a base car image.</p>
+          <div class="relative mt-4">
+            <img src="https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=1200&q=60" alt="base car" class="w-full h-64 object-cover rounded"/>
+            <div id="visualLayer" class="absolute inset-0 pointer-events-none"></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="bg-white p-4 rounded shadow">
+          <h4 class="font-semibold">Parts added</h4>
+          <div id="partsList" class="mt-2 flex flex-col gap-2"></div>
+        </div>
+        <div class="mt-4 bg-white p-4 rounded shadow">
+          <h4 class="font-semibold">Quick Quote</h4>
+          <div class="mt-2 font-bold" id="quoteTotal">$0.00</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="mt-12">
+      <h3 class="text-2xl font-bold">Contact & Quote Request</h3>
+      <p class="text-gray-600 mt-2">Tell us about your car and the mods you're after — we’ll get back with concepts and a quote.</p>
+
+      <form id="contactForm" class="mt-4 grid md:grid-cols-2 gap-4 bg-white p-6 rounded shadow">
+        <input required name="name" placeholder="Full name" class="border p-2 rounded" />
+        <input required name="email" placeholder="Email" type="email" class="border p-2 rounded" />
+        <input name="phone" placeholder="Phone" class="border p-2 rounded" />
+        <input name="car" placeholder="Car make & model" class="border p-2 rounded" />
+        <textarea name="message" placeholder="Describe modifications" class="border p-2 rounded md:col-span-2"></textarea>
+        <div class="md:col-span-2 flex gap-2">
+          <button class="bg-indigo-600 text-white px-4 py-2 rounded">Send Request</button>
+          <button type="reset" class="bg-gray-200 px-4 py-2 rounded">Reset</button>
+        </div>
+      </form>
+    </section>
+
+    <footer class="mt-12 text-center text-gray-500">© <span id="year"></span> DJS-Projects • Don's JapSpec Projects</footer>
+  </main>
+
+  <!-- Product Modal -->
+  <div id="modal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg max-w-3xl w-full p-6">
+      <div class="flex justify-between items-start">
+        <div>
+          <h2 id="modalTitle" class="text-2xl font-bold"></h2>
+          <p id="modalSub" class="text-sm text-gray-600"></p>
+        </div>
+        <button id="modalClose" class="text-gray-700">Close</button>
+      </div>
+      <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <img id="modalImg" src="" alt="product" class="w-full h-64 object-cover rounded"/>
+        </div>
+        <div>
+          <p id="modalDesc" class="mb-2"></p>
+          <p id="modalPrice" class="font-semibold mb-4"></p>
+          <p id="modalCompat" class="text-sm text-gray-600 mb-4"></p>
+          <div class="flex gap-2">
+            <button id="modalAdd" class="bg-blue-600 text-white px-4 py-2 rounded">Add to Visualizer</button>
+            <a id="modalEmail" class="bg-gray-200 px-4 py-2 rounded inline-block" href="#">Email Sales</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Sample Data ---
+    const SAMPLE = [
+      {id:'p1',brand:'Nissan',modelCompatibility:['Silvia S14','180SX'],category:'Body',title:'Widebody Kit - Type R',price:1499.99,images:['https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=60'],description:'Full polyurethane widebody kit with bolt-on fenders, rear diffuser and spoiler.'},
+      {id:'p2',brand:'Subaru',modelCompatibility:['Impreza WRX','Legacy'],category:'Engine',title:'Performance Turbocharger Kit',price:2399.00,images:['https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?auto=format&fit=crop&w=1200&q=60'],description:'Stage 2 turbo kit tuned for quick spool and high horsepower.'},
+      {id:'p3',brand:'Toyota',modelCompatibility:['AE86','Supra MK4'],category:'Gearbox',title:'Close Ratio Gearbox (6-speed)',price:3500.00,images:['https://images.unsplash.com/photo-1518459031867-a89b944bffe0?auto=format&fit=crop&w=1200&q=60'],description:'Lightweight close-ratio 6-speed gearbox for track and drift applications.'},
+      {id:'p4',brand:'Honda',modelCompatibility:['Civic EG','Integra DC2'],category:'Suspension',title:'Coilover Suspension Kit',price:899.99,images:['https://images.unsplash.com/photo-1563720226421-6e9a0a99c33e?auto=format&fit=crop&w=1200&q=60'],description:'Adjustable height & damping coilovers for precision handling.'}
+    ];
+
+    // --- App State ---
+    let inventory = JSON.parse(localStorage.getItem('djs_inventory')||'null') || SAMPLE.slice();
+    const BRANDS = ['All','Nissan','Subaru','Toyota','Honda','Mitsubishi'];
+    const CATEGORIES = ['All','Body','Engine','Gearbox','Suspension','Wheels','Electronics','Interior'];
+    let brandFilter = 'All', categoryFilter='All', q='';
+    let visualParts = [];
+
+    // --- DOM Refs ---
+    const brandFilterEl = document.getElementById('brandFilter');
+    const categoryFilterEl = document.getElementById('categoryFilter');
+    const qEl = document.getElementById('q');
+    const productGrid = document.getElementById('productGrid');
+    const noResults = document.getElementById('noResults');
+    const partsList = document.getElementById('partsList');
+    const visualLayer = document.getElementById('visualLayer');
+    const quoteTotal = document.getElementById('quoteTotal');
+    const addSampleBtn = document.getElementById('addSample');
+    const exportCSV = document.getElementById('exportCSV');
+
+    // Modal
+    const modal = document.getElementById('modal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalSub = document.getElementById('modalSub');
+    const modalImg = document.getElementById('modalImg');
+    const modalDesc = document.getElementById('modalDesc');
+    const modalPrice = document.getElementById('modalPrice');
+    const modalCompat = document.getElementById('modalCompat');
+    const modalClose = document.getElementById('modalClose');
+    const modalAdd = document.getElementById('modalAdd');
+    const modalEmail = document.getElementById('modalEmail');
+
+    // before/after
+    const baRange = document.getElementById('baRange');
+    const afterLayer = document.getElementById('afterLayer');
+    const baHandle = document.getElementById('baHandle');
+
+    // init
+    document.getElementById('year').innerText = new Date().getFullYear();
+
+    function saveInventory(){ localStorage.setItem('djs_inventory', JSON.stringify(inventory)); }
+
+    function money(v){ return v.toLocaleString(undefined,{style:'currency',currency:'USD'}); }
+
+    function renderFilters(){
+      brandFilterEl.innerHTML = '';
+      BRANDS.forEach(b=> brandFilterEl.appendChild(new Option(b,b)));
+      categoryFilterEl.innerHTML = '';
+      CATEGORIES.forEach(c=> categoryFilterEl.appendChild(new Option(c,c)));
+
+      document.getElementById('quickFilters').innerHTML = '';
+      ['Body','Engine','Gearbox','Suspension'].forEach(f=>{
+        const btn = document.createElement('button');
+        btn.className = 'px-2 py-1 rounded bg-gray-100';
+        btn.textContent = f;
+        btn.onclick = ()=>{ categoryFilter = (categoryFilter===f? 'All': f); categoryFilterEl.value = categoryFilter; renderProducts(); };
+        document.getElementById('quickFilters').appendChild(btn);
+      });
+    }
+
+    function filtered(){
+      return inventory.filter(it=>{
+        if(brandFilter!=='All' && it.brand!==brandFilter) return false;
+        if(categoryFilter!=='All' && it.category!==categoryFilter) return false;
+        if(q && !(`${it.title} ${it.description} ${it.brand} ${it.modelCompatibility?.join(' ')}`).toLowerCase().includes(q.toLowerCase())) return false;
+        return true;
+      });
+    }
+
+    function renderProducts(){
+      productGrid.innerHTML='';
+      const arr = filtered();
+      if(arr.length===0){ noResults.classList.remove('hidden'); }
+      else{ noResults.classList.add('hidden'); }
+      arr.forEach(item=>{
+        const card = document.createElement('div'); card.className='bg-white rounded shadow overflow-hidden';
+        const img = document.createElement('img'); img.src = item.images?.[0]||''; img.className='w-full h-40 object-cover';
+        const body = document.createElement('div'); body.className='p-3';
+        const titleRow = document.createElement('div'); titleRow.className='flex justify-between items-start';
+        const left = document.createElement('div'); const h3 = document.createElement('h3'); h3.className='font-semibold'; h3.textContent = item.title; const p = document.createElement('p'); p.className='text-xs text-gray-500'; p.textContent = item.brand + ' • ' + item.category; left.appendChild(h3); left.appendChild(p);
+        const right = document.createElement('div'); right.className='text-right'; right.innerHTML = '<div class="font-bold">'+money(item.price)+'</div>';
+        titleRow.appendChild(left); titleRow.appendChild(right);
+        const desc = document.createElement('p'); desc.className='text-sm mt-2 text-gray-600'; desc.textContent = item.description.slice(0,90) + '...';
+        const actions = document.createElement('div'); actions.className='mt-3 flex gap-2';
+        const viewBtn = document.createElement('button'); viewBtn.className='px-3 py-1 bg-indigo-600 text-white rounded'; viewBtn.textContent = 'View';
+        viewBtn.onclick = ()=> openModal(item);
+        const previewBtn = document.createElement('button'); previewBtn.className='px-3 py-1 bg-gray-100 rounded'; previewBtn.textContent='Preview';
+        previewBtn.onclick = ()=> addToVisualizer(item);
+        actions.appendChild(viewBtn); actions.appendChild(previewBtn);
+        body.appendChild(titleRow); body.appendChild(desc); body.appendChild(actions);
+        card.appendChild(img); card.appendChild(body);
+        productGrid.appendChild(card);
+      });
+    }
+
+    function openModal(item){
+      modalTitle.textContent = item.title;
+      modalSub.textContent = item.brand + ' • ' + item.category;
+      modalImg.src = item.images?.[0]||'';
+      modalDesc.textContent = item.description;
+      modalPrice.textContent = money(item.price);
+      modalCompat.textContent = 'Compatible: ' + (item.modelCompatibility||[]).join(', ');
+      modalEmail.href = `mailto:sales@djs-projects.com?subject=Inquiry about ${encodeURIComponent(item.title)}`;
+      modal.classList.remove('hidden'); modal.style.display='flex';
+      modalAdd.onclick = ()=>{ addToVisualizer(item); modalClose.click(); };
+    }
+    modalClose.onclick = ()=>{ modal.classList.add('hidden'); modal.style.display='none'; };
+
+    function addToVisualizer(item){
+      if(visualParts.find(p=>p.id===item.id)) return; visualParts.push(item); renderVisualizer();
+    }
+
+    function removeFromVisualizer(id){ visualParts = visualParts.filter(p=>p.id!==id); renderVisualizer(); }
+
+    function renderVisualizer(){
+      partsList.innerHTML=''; visualLayer.innerHTML='';
+      visualParts.forEach((p,i)=>{
+        const row = document.createElement('div'); row.className='flex items-center gap-3';
+        const thumb = document.createElement('img'); thumb.src = p.images?.[0]; thumb.className='w-16 h-12 object-cover rounded';
+        const info = document.createElement('div'); info.className='flex-1'; info.innerHTML = `<div class="font-medium text-sm">${p.title}</div><div class="text-xs text-gray-500">${money(p.price)}</div>`;
+        const rm = document.createElement('button'); rm.className='text-xs text-red-600'; rm.textContent='Remove'; rm.onclick = ()=> removeFromVisualizer(p.id);
+        row.appendChild(thumb); row.appendChild(info); row.appendChild(rm);
+        partsList.appendChild(row);
+
+        // add overlay thumbnail to visualLayer
+        const ov = document.createElement('img'); ov.src = p.images?.[0]; ov.style.position='absolute'; ov.style.width = '120px'; ov.style.height='80px'; ov.style.right = (20 + i*40) + 'px'; ov.style.bottom = (20 + i*10) + 'px'; ov.style.borderRadius='8px'; ov.style.boxShadow='0 6px 16px rgba(0,0,0,0.25)'; visualLayer.appendChild(ov);
+      });
+      quoteTotal.textContent = money(visualParts.reduce((s,p)=>s+p.price,0));
+    }
+
+    // CSV export
+    exportCSV.onclick = ()=>{
+      const headers = ['id','title','brand','category','price','modelCompatibility','description'];
+      const rows = [headers.join(',')];
+      inventory.forEach(it=>{
+        rows.push([it.id,`"${it.title.replace(/"/g,'""')}"`,it.brand,it.category,it.price,`"${(it.modelCompatibility||[]).join(';')}"`,`"${it.description.replace(/"/g,'""')}"`].join(','));
+      });
+      const blob = new Blob([rows.join('\n')],{type:'text/csv'});
+      const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'djs_inventory.csv'; a.click(); URL.revokeObjectURL(url);
+    };
+
+    // Add sample part
+    addSampleBtn.onclick = ()=>{
+      const newItem = {id:'p'+(inventory.length+1),brand:'Mitsubishi',modelCompatibility:['Evo VII','Lancer'],category:'Wheels',title:'Forged Track Wheels 18"',price:1299.99,images:['https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=60'],description:'Lightweight 5-lug forged wheels designed for high-performance handling.'};
+      inventory.unshift(newItem); saveInventory(); renderProducts();
+    };
+
+    // filters events
+    brandFilterEl.onchange = (e)=>{ brandFilter = e.target.value; renderProducts(); };
+    categoryFilterEl.onchange = (e)=>{ categoryFilter = e.target.value; renderProducts(); };
+    qEl.oninput = (e)=>{ q = e.target.value; renderProducts(); };
+
+    // before/after
+    baRange.oninput = (e)=>{ const v = e.target.value; afterLayer.style.width = v + '%'; baHandle.style.left = `calc(${v}% - 14px)`; };
+
+    // contact form demo
+    document.getElementById('contactForm').onsubmit = function(e){ e.preventDefault(); alert('Thanks! Demo: we would email you a concept and quote.'); this.reset(); };
+
+    // initialize
+    renderFilters(); renderProducts(); renderVisualizer();
+
+  </script>
+</body>
+</html>
